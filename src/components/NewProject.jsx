@@ -7,12 +7,21 @@ function NewProject({ onAddProject }) {
   const dueDateInputRef = useRef();
 
   function handleSave() {
-    const newProjectData = {
+    const { title, description, dueDate } = {
       title: titleInputRef.current.value,
       description: descriptionInputRef.current.value,
       dueDate: dueDateInputRef.current.value,
     };
-    onAddProject(newProjectData);
+
+    if (
+      title.trim() === "" ||
+      description.trim() === "" ||
+      dueDate.trim() === ""
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+    onAddProject({ title, description, dueDate });
   }
 
   return (
