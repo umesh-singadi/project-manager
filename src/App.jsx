@@ -10,7 +10,6 @@ function App() {
   });
 
   function handleStartAddProject() {
-    console.log("clicked");
     setProjectsState((preState) => {
       return {
         ...preState,
@@ -18,16 +17,31 @@ function App() {
       };
     });
   }
+
+  function handleAddProject(projectData) {
+    const newProject = { ...projectData, id: Math.random() };
+    setProjectsState((preState) => {
+      return {
+        ...preState,
+        selectedProject: undefined,
+        projects: [...preState.projects, newProject],
+      };
+    });
+  }
   let content;
 
   if (projectsState.selectedProject === null) {
-    content = <NewProject />;
+    content = <NewProject onAddProject={handleAddProject} />;
   } else if (projectsState.selectedProject === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   }
+  console.log(projectsState);
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectSidebar onStartAddProject={handleStartAddProject} />
+      <ProjectSidebar
+        projects={projectsState.projects}
+        onStartAddProject={handleStartAddProject}
+      />
       {content}
     </main>
   );
