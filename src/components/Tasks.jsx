@@ -1,27 +1,23 @@
 import NewTask from "./NewTask";
+import useContextState from "../hooks/useContextState";
 
-function Tasks({ onAddTask, tasks, onDeleteTask }) {
+function Tasks() {
+  const { deleteTask, state } = useContextState();
+  const { tasks, selectedProjectId } = state;
+  const projectTasks = tasks.filter(
+    (task) => task.projectId === selectedProjectId
+  );
+
   return (
     <section>
       <h2 className="text-stone-700 mb-4 font-bold text-2xl">
-        <NewTask onAddTask={onAddTask} />
+        <NewTask />
       </h2>
-      {tasks.length ? (
+      {projectTasks.length ? (
         <ul className="w-full">
-          {tasks.map((task) => {
-            return (
-              <li
-                key={task.id}
-                className="flex justify-between items-center border mb-2 p-2 ">
-                <h1>{task.text}</h1>
-                <button
-                  onClick={() => onDeleteTask(task.id)}
-                  className="text-stone-700 hover:text-red-500">
-                  Delete
-                </button>
-              </li>
-            );
-          })}
+          {projectTasks.map((task) => (
+            <TaskItem key={task.id} task={task} onDelete={deleteTask} />
+          ))}
         </ul>
       ) : (
         <p className="text-stone-800 my-4">
@@ -29,6 +25,19 @@ function Tasks({ onAddTask, tasks, onDeleteTask }) {
         </p>
       )}
     </section>
+  );
+}
+
+function TaskItem({ task, onDelete }) {
+  return (
+    <li className="flex justify-between items-center border mb-2 p-2">
+      <h1>{task.text}</h1>
+      <button
+        className="text-stone-700 hover:text-red-500"
+        onClick={() => onDelete(task.id)}>
+        Delete
+      </button>
+    </li>
   );
 }
 

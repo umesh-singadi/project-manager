@@ -1,13 +1,14 @@
 import Tasks from "./Tasks";
+import useContextState from "../hooks/useContextState";
 
-function SelectedProject({
-  project,
-  onDelete,
-  onAddTask,
-  tasks,
-  onDeleteTask,
-}) {
-  const date = new Date(project.dueDate).toLocaleDateString("en-In", {
+function SelectedProject() {
+  const { deleteProject, state } = useContextState();
+
+  const selectedProject = state.projects.find(
+    (project) => project.id === state.selectedProjectId
+  );
+
+  const date = new Date(selectedProject.dueDate).toLocaleDateString("en-In", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -17,20 +18,20 @@ function SelectedProject({
       <header className="pb-2 mb-4 border-b border-stone-300">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-stone-600 mb-2">
-            {project.title}
+            {selectedProject.title}
           </h1>
           <button
             className="text-stone-600 hover:text-stone-950"
-            onClick={onDelete}>
+            onClick={deleteProject}>
             Delete
           </button>
         </div>
         <p className="text-stone-400 mb-4">{date}</p>
         <p className="text-stone-600 whitespace-pre-wrap">
-          {project.description}
+          {selectedProject.description}
         </p>
       </header>
-      <Tasks tasks={tasks} onAddTask={onAddTask} onDeleteTask={onDeleteTask} />
+      <Tasks />
     </div>
   );
 }

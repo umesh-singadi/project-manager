@@ -1,21 +1,24 @@
-import noProjectImg from "../assets/no-projects.png";
+import noProjectImage from "../assets/no-projects.png";
 import Button from "./Button";
+import useContextState from "../hooks/useContextState";
 
-function NoProjectSelected({ onStartAddProject }) {
+function NoProjectSelected() {
+  const { startAddProject } = useContextState();
+
   return (
-    <div className="w-2/3 mt-24 text-center ">
+    <div className="flex flex-col items-center mt-24">
       <img
-        src={noProjectImg}
+        src={noProjectImage}
         className="w-16 h-16 object-contain mx-auto"
-        alt="No project selected"
+        alt="No Project Selected"
       />
-      <h2 className="text-xl font-bold text-stone-500 my-4">
-        No project selected
+      <h2 className="text-xl font-bold text-stone-500 mt-4">
+        No Project Selected
       </h2>
-      <p className="text-stone-400 mb-4">
-        Select a project or start with new one
+      <p className="text-stone-400 mt-2">
+        Please select a project or start with a new one.
       </p>
-      <Button onClick={onStartAddProject}>Create new project</Button>
+      <Button onClick={startAddProject}>Create New Project</Button>
     </div>
   );
 }
