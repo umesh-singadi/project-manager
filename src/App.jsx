@@ -5,28 +5,28 @@ import ProjectSidebar from "./components/ProjectSidebar";
 import SelectedProject from "./components/SelectedProject";
 
 function App() {
-  const [projectsState, setProjectsState] = useState({
+  const [state, setState] = useState({
     selectedProjectId: undefined,
     projects: [],
     tasks: [],
   });
 
   const startAddProject = () => {
-    setProjectsState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       selectedProjectId: null,
     }));
   };
 
   const cancelAddProject = () => {
-    setProjectsState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       selectedProjectId: undefined,
     }));
   };
 
   const selectProject = (projectId) => {
-    setProjectsState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       selectedProjectId: projectId,
     }));
@@ -34,73 +34,76 @@ function App() {
 
   const addProject = (projectData) => {
     const newProject = { ...projectData, id: Math.random() };
-    setProjectsState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       selectedProjectId: undefined,
       projects: [...prevState.projects, newProject],
     }));
   };
+
   const deleteProject = () => {
-    setProjectsState((preState) => ({
-      ...preState,
+    setState((prevState) => ({
+      ...prevState,
       selectedProjectId: undefined,
-      projects: preState.projects.filter(
-        (project) => project.id !== preState.selectedProjectId
+      projects: prevState.projects.filter(
+        (project) => project.id !== prevState.selectedProjectId
       ),
     }));
   };
+
   const addTask = (text) => {
-    setProjectsState((preState) => {
+    setState((prevState) => {
       const taskId = Math.random();
       const newTask = {
         text,
         id: taskId,
-        projectId: preState.selectedProjectId,
+        projectId: prevState.selectedProjectId,
       };
       return {
-        ...preState,
-        tasks: [newTask, ...preState.tasks],
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks],
       };
     });
   };
 
   const deleteTask = (taskId) => {
-    setProjectsState((preState) => ({
-      ...preState,
-      tasks: preState.tasks.filter((task) => task.id !== taskId),
+    setState((prevState) => ({
+      ...prevState,
+      tasks: prevState.tasks.filter((task) => task.id !== taskId),
     }));
   };
 
-  const selectedProject = projectsState.projects.find(
-    (project) => project.id === projectsState.selectedProjectId
+  const selectedProject = state.projects.find(
+    (project) => project.id === state.selectedProjectId
   );
-  const selectedTasks = projectsState.tasks.filter(
-    (task) => task.projectId === projectsState.selectedProjectId
-  );
-
-  let content = (
-    <SelectedProject
-      tasks={selectedTasks}
-      onAddTask={addTask}
-      onDeleteTask={deleteTask}
-      onDelete={deleteProject}
-      project={selectedProject}
-    />
+  const selectedTasks = state.tasks.filter(
+    (task) => task.projectId === state.selectedProjectId
   );
 
-  if (projectsState.selectedProjectId === null) {
+  let content;
+  if (state.selectedProjectId === null) {
     content = <NewProject onCancel={cancelAddProject} onAdd={addProject} />;
-  } else if (projectsState.selectedProjectId === undefined) {
+  } else if (state.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={startAddProject} />;
+  } else {
+    content = (
+      <SelectedProject
+        tasks={selectedTasks}
+        onAddTask={addTask}
+        onDeleteTask={deleteTask}
+        onDelete={deleteProject}
+        project={selectedProject}
+      />
+    );
   }
 
   return (
     <main className="h-screen my-8 flex gap-8">
       <ProjectSidebar
-        projects={projectsState.projects}
+        projects={state.projects}
         onStartAddProject={startAddProject}
         onSelectProject={selectProject}
-        selectedProjectId={projectsState.selectedProjectId}
+        selectedProjectId={state.selectedProjectId}
       />
       {content}
     </main>
