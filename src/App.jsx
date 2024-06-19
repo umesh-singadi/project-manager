@@ -64,6 +64,13 @@ function App() {
     });
   };
 
+  const deleteTask = (taskId) => {
+    setProjectsState((preState) => ({
+      ...preState,
+      tasks: preState.tasks.filter((task) => task.id !== taskId),
+    }));
+  };
+
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
@@ -75,6 +82,7 @@ function App() {
     <SelectedProject
       tasks={selectedTasks}
       onAddTask={addTask}
+      onDeleteTask={deleteTask}
       onDelete={deleteProject}
       project={selectedProject}
     />
